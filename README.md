@@ -1,154 +1,188 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Kaggle Competition - Starter
+# West Nile Virus Prediction - Predict West Nile virus in mosquitos across the city of Chicago
 
-## Introduction
+ - [Problem Statement](#Problem-Statement)
+ - [Data Sources](#Data-Sources)
+ - [Executive Summary](#Executive-Summary)
+ - [Conclusion & Recommendations](#Conclusion-&-Recommendations)
+ - [Notebook Contents](#Notebook-Contents)
+ 
 
-Welcome to your first week of work at the Disease And Treatment Agency, division of Societal Cures In Epidemiology and New Creative Engineering (DATA-SCIENCE). Time to get to work!
+## Problem Statement
+In order to efficiently combat the West Nile Virus in Chicago we aim to :-
 
-Due to the recent epidemic of West Nile Virus in the Windy City, we've had the Department of Public Health set up a surveillance and control system. We're hoping it will let us learn something from the mosquito population as we collect data over time. Pesticides are a necessary evil in the fight for public health and safety, not to mention expensive! We need to derive an effective plan to deploy pesticides throughout the city, and that is **exactly** where you come in!
-
-## Dataset
-
-The dataset, along with description, can be found here: [https://www.kaggle.com/c/predict-west-nile-virus/](https://www.kaggle.com/c/predict-west-nile-virus/).
-
-**This is also where you will be submitting your code for evaluation**. The public leaderboard uses roughly 30% of the dataset to score an AUC (Area Under Curve) metric.
-
-> If you do not already have a Kaggle account, you will need to sign up on the website.  Also note that you will be submitting a "Late Submission" on Kaggle because the official competition has ended.  You can use the leaderboard to see how your results compare against roughly 1300 other data science teams!
-
-You can submit predictions as many times as you want to Kaggle, but there is a limit of 5 submissions per day.  Be intentional with your submissions!
+1. Build a model and make predictions that the city of Chicago can use about when and where when it decides to spray pesticides
+2. Conduct a cost-benefit analysis that include annual cost projections for various levels of pesticide coverage (cost) and the effect of these various levels of pesticide coverage (benefit)
 
 
-#### Navigating Group Work
+--- 
+## Data Sources
+The sources of the data will be from Kaggle.
 
-This project will be executed as a group.  To make your team as effective and efficient as possible you should do the create a shared GitHub repo and project planning document as described in the deliverables section below.
+Main dataset
 
-## Deliverables
+These test results are organized in such a way that when the number of mosquitos exceed 50, they are split into another record (another row in the dataset), such that the number of mosquitos are capped at 50. 
 
-**GitHub Repo**
+The location of the traps are described by the block number and street name. The attributes are mapped into Longitude and Latitude in the dataset. Please note that these are derived locations. For example, Block=79, and Street= "W FOSTER AVE" gives us an approximate address of "7900 W FOSTER AVE, Chicago, IL", which translates to (41.974089,-87.824812) on the map.
 
-1. Create a GitHub repository for the group. Each member should be added as a contributor.
-2. Retrieve the dataset and upload it into a directory named `assets`.
-3. Generate a .py or .ipynb file that imports the available data.
+Some traps are "satellite traps". These are traps that are set up near (usually within 6 blocks) an established trap to enhance surveillance efforts. Satellite traps are postfixed with letters. For example, T220A is a satellite trap to T220. 
 
-**Project Planning**
+Not all the locations are tested at all times. Also, records exist only when a particular species of mosquitos is found at a certain trap at a certain time. 
 
-1. Define your deliverable - what is the end result?
-2. Break that deliverable up into its components, and then go further down the rabbit hole until you have actionable items. Document these using a project managment tool to track things getting done.  The tool you use is up to you; it could be Trello, a spreadsheet, GitHub issues, etc.
-3. Begin deciding priorities for each task. These are subject to change, but it's good to get an initial consensus. Order these priorities however you would like.
-4. You planning documentation (or a link to it) should be included in your GitHub repo.
+Spray Data
 
-**EDA**
+The City of Chicago also does spraying to kill mosquitos. We are given the GIS data for their spray efforts in 2011 and 2013. Spraying can reduce the number of mosquitos in the area, and therefore might eliminate the appearance of West Nile virus. 
 
-1. Describe the data. What does it represent? What types are present? What does each data points' distribution look like? Discuss these questions, and your own, with your partners. Document your conclusions.
-2. What kind of cleaning is needed? Document any potential issues that will need to be resolved.
+Weather Data
 
-**Note:** As you know, EDA is the single most important part of data science. This is where you should be spending most of your time. Knowing your data, and understanding the status of its integrity, is what makes or breaks a project.
+It is believed that hot and dry conditions are more favorable for West Nile virus than cold and wet. We are provided with the dataset from NOAA of the weather conditions of 2007 to 2014, during the months of the tests. 
 
-**Modeling**
+Station 1: CHICAGO O'HARE INTERNATIONAL AIRPORT Lat: 41.995 Lon: -87.933 Elev: 662 ft. above sea level
+Station 2: CHICAGO MIDWAY INTL ARPT Lat: 41.786 Lon: -87.752 Elev: 612 ft. above sea level
 
-1. The goal is of course to build a model and make predictions that the city of Chicago can use when it decides where to spray pesticides! Your team should have a clean Jupyter Notebook that shows your EDA process, your modeling and predictions.
-2. Conduct a cost-benefit analysis. This should include annual cost projections for various levels of pesticide coverage (cost) and the effect of these various levels of pesticide coverage (benefit). *(Hint: How would we quantify the benefit of pesticide spraying? To get "maximum benefit," what does that look like and how much does that cost? What if we cover less and therefore get a lower level of benefit?)*
-3. Your final submission CSV should be in your GitHub repo.
+Map Data
 
-**Presentation**
-* Audience: You are presenting to members of the CDC. Some members of the audience will be biostatisticians and epidemiologists who will understand your models and metrics and will want more information. Others will be decision-makers, focusing almost exclusively on your cost-benefit analysis. Your job is to convince both groups of the best course of action in the same meeting and be able to answer questions that either group may ask.
-* The length of your presentation should be about 10 minutes (a rough guideline: 1 minute intro, 5 minutes on model, 2 minutes on cost-benefit analysis, 2 minute recommendations/conclusion).  Touch base with your local instructor... er, manager... for specific logistic requirements!
+The map files mapdata_copyright_openstreetmap_contributors.rds and mapdata_copyright_openstreetmap_contributors.txt are from Open Streetmap and are primarily provided for use in visualizations.
 
 ---
+## Executive Summary
+**INTRODUCTION**
 
-**Your project is due at 13 Aug 2021 9AM.**
+Every year from late-May to early-October, public health workers in Chicago setup mosquito traps scattered across the city. Every week from Monday through Wednesday, these traps collect mosquitos, and the mosquitos are tested for the presence of West Nile virus before the end of the week. The test results include the number of mosquitos, the mosquitos species, and whether or not West Nile virus is present in the cohort. 
+
+**METHODOLOGY**
+
+# Data Cleaning 
+Train - dataset is for odd years 2007, 2009, 2011 and 2013, with 10,506 rows and 12 columns. 
+Test - dataset is for even years 2008, 2010, 2012 and 2014, with 116,293 rows and 11 columns
+
+Minimal cleaning is required for Train and Test set, as there are no null values in the dataframes. 'Date' column datatype is changed from object to datetime.
+
+Spray - dataset is for years 2011 and 2013, with 2,944 rows and 4 columns
+
+There are 584 null values in 'Time' column, with 541 duplicate rows. All null and duplicate values happened on 2011-09-07, and are dropped from the dataset. 'Date' column datatype is changed from object to datetime.
+
+Weather - dataset is for every year from 2007 to 2013, with 13,710 rows and 22 columns
+- There are no null values in all columns. 'Date' column datatype is changed from object to datetime. 
+- There are some non-numeric values in columns which we have replaced with numeric data shown below :-
+    'M' in Tavg replaced with average value of Tmax and Tmin
+    'T' in PrecipTotal replaced with 0.005
+    'M' in PrecipTotal replaced with 0
+- There are no Sunrise and Sunset informaton for Station 2, hence the weather dataframe is split by stations, with sunrise and sunset values in station 1 copied over to station 2 based on Date.
+- A new feature, Day_length is created to capture the number of daylight hours between Sunrise and sunset, and added to weather dataframe in station 1. This feature was subsequently copied over to station 2 based on Date as well.
+
+# EDA
+Preliminary check on train dataset shows that data is imbalanced as only 5% of entries are labelled as WnV present.
+
+Trap Locations
+There are 136 trap locations across Chicago, and 2 weather stations at the airports to capture weather data, Station 1: Chicago O'Hare International Airport and Station 2: Chicago Midway International Aiport.
+
+Mosquitoes Species 
+There are 7 unique species in the Train dataset, but only 3 species are found to spread the West Nile Virus
+- Culex Pipiens/Restuans
+- Culex Restuans
+- Culex Pipiens
+The species that do not spread the virus have low counts in the Train set, but high counts in the Test set
+
+Seasonality Effects
+WNV cases tend to see a sharp peak in August before dropping. The number of mosquitoes caught show a similar trend where there is a sharp peak before dropping. There is likely a time lag between mosquitoes caught and WNV cases, taking into account the lifecyle of mosquitoes of approximately 7-10 days. WNV cases coincides with the summer months of early June to end August, which also happens to be months where dewpoint, temperature and day length are at its highest / longest. July and August are summer and typically the season when heat and humidity provide the right condition for mosquitoes to breed.
+
+Spray Data
+There are a total of 9 spray dates in dataset, 1 in 2011 and 8 in 2013. Spray data seems to be captured once in every 10 seconds resulting in > 2,000 rows of data for only 9 dates. Not all hotspots or locations with mosquitoes are being sprayed which may indicate spraying is being done without prior research.
+
+Weather Data
+In the correlation table, temperature and dewpoint seems to have a high and positive correlation predicting the presence of the WNV, while the resultant wind speed and day length are negatively correlated.
+
+The amount of precipitation seems to be fluctuating and does not follow a specific seasonal trend. At first glance, it seemed that June or July are the wettest months, but across years the rainfall can vary greatly month to month. In 2009 Oct, the precipitation looks to be greater than usual, but the entry is only based on one single day. More data points are needed to do a more accurate weather analysis.
+
+# Feature Engineering
+Species:
+All species which do not carry the West Nile Virus will be regrouped to 'OTHERS'
+Convert the categorical feature of Species into dummy variables
+
+Traps:
+Cluster all traps based on their locations to simplify analysis (we will try with 30 clusters), using K Means clustering
+Convert this categorical feature of Trap Clusters into dummy variables
+Clustering was derived on Train dataset and subsequently used to predict clustering on Test
+
+Weather data:
+Create new column "Station" to indicate which weather station a trap is closer to. Weather data are then assigned to each trap location after clusting of traps are done.
+Weather features are further transformed with: Shifting feature forward for period of 6 days, Looking back 12 days and taking the mean, Looking back 14 days and taking the max
+Once transformation is done, add those weather features to Train set
+
+After Feature Engineering, dataset would have a total of 86 features, consisting of:
+- Time features (Date, year, month, week etc)
+- Location features (Address, Block, Street, Longitude, Latitude etc)
+- Mosquito Species (3 dummy variables)
+- 30 trap clusters
+- 9 weather features
+- 27 (9x3) transformed weather features
+
+
+# Modelling
+Handling Imbalanced Data
+Using Over/under sampling and SMOTE
+
+Model Comparison and Evaluation
+Train data is highly imbalanced, with only 5% of the Train data being positive (Presence of WNV), two metrics will be used: Precision-Recall AUC Score and F1 Score.
+
+**MODEL EVALUATION**
+7 models are used below :
+
+| Models                    | PR-AUC_Train | PR_Auc_Test | Generalization | F1_train | F1_test | Generalization  |
+|---------------------------|--------------|-------------|----------------|----------|---------|-----------------|
+| Baseline Model            | 0.05         | 0.05        | 0.27           | 0.1      | 0.1     | 0.25            |
+| O/S + U/S + GradientBoost | 0.28         | 0.25        | 9.33           | 0.34     | 0.28    | 18.95           |
+| O/S + U/S + RandomForest  | 0.21         | 0.2         | 4.59           | 0.17     | 0.16    | 5.62            |
+| O/S + U/S + LightGBM      | 0.28         | 0.26        | 4.67           | 0.32     | 0.29    | 9.15            |
+| Smote + GradientBoost     | 0.3          | 0.26        | 11.83          | 0.24     | 0.27    | 10.82           |
+| Smote + RandomForest      | 0.24         | 0.22        | 6.71           | 0.24     | 0.24    | 0.77            |
+| Smote + LightGBM          | 0.33         | 0.31        | 6.67           | 0.31     | 0.32    | 0.96            |
+
+We will select the **Smote + LightGBM** as it has good generalisation, f1 and ROC-AUC scores, compared to the other models. 
+
+
+# Cost Benefit Analysis
+
+| Inaccuracy Costs                                           |                                                                   |
+|------------------------------------------------------------|-------------------------------------------------------------------|
+| Impact of False Positive indication of West Nile Virus     | Impact of False Negative indication of West Nile Virus            |
+| 1. Unnecessary Spraying                                    | 1. Increased proliferation of West Nile Virus disease             |
+| 2. Loss of Productivity of Civil Servants                  | 2. Increased strain on health care resources due to rise in cases |
+| 3. Causes disruption to daily life in affected communities | 3. Public Health reputational and political risk                  |
+| 4. Increased burden on taxpayers                           |
+
+The costs of spraying are a fraction of the Medical and Productivity costs (not to mention the lives lost), which makes the effort well worth the financial investment. Usage of our model would assist in a more target usage of pesticide spray which could also further reduce costs. Money saved for the taxpayer could engender more fiscal confidence in public health system.
+
 
 ---
+## Conclusion 
 
-### Project Feedback + Evaluation
+Based on the cost benefit analysis, we recommend to spray and we will further deepdive to spray data analysis below.
 
-For all projects, students will be evaluated on a simple 4 point scale (0-3 inclusive). Instructors will use this rubric when scoring student performance on each of the core project requirements:
+Findings from Spray Data
+1) Spraying is done in an ad-hoc manner
+Data from 2011 and 2013 seems to suggest that it was done without prior research For e.g. in 16 Aug and 22 Aug 2013, spraying was not done on WNV hotspot areas or areas where trap locations are found
 
-Score | Expectations
------ | ------------
-**0** | _Does not meet expectations. Try again._
-**1** | _Approaching expectations. Getting there..._
-**2** | _Meets expectations. Great job._
-**3** | _Surpasses expectations. Brilliant!_
+2) Spray not effective with time
+Number of mosquitoes did not drop within spraying area. Effectiveness of spraying seemed to reduce later on in the months, perhaps due to mosquitoes developing resistance to pesticides over time
 
-### Rubric
+3) Spraying not effective in curbing virus
+WNV hotspots still remain 2 weeks after spraying Assuming adulticide sprays are applied, which only kills adult mosquitoes, it is not truly effective in reducing virus as mosquito larvae is still alive.
 
-Your final assessment ("grade" if you will) will be calculated based on a topical rubric (see below).  For each category, you will receive a score of 0-3.  From the rubric you can see descriptions of each score and what is needed to attain those scores.
+## Considerations & Recommendations
+WNV is more prevalent under certain conditions, such as longer daylight hours and higher average temperatures.
 
-For Project 3 the evaluation categories are as follows:
-- [Organization](#organization)
-- [Data Structures](#data-structures)
-- [Python Syntax and Control Flow](#python-syntax-and-control-flow)
-- [Probability and Statistics](#probability-and-statistics)
-- [Modeling](#modeling)
-- [Presentation](#presentation)
+Spraying efforts should be focused during June to early July; current spraying efforts are ineffective. Suggest to spray in early June to July, considering the gestation period of mosquitoes resulting in peak WNV cases in August
 
-#### Organization
+There may be health issues related to spray chemicals, as pregnant women and children have a greater risk of getting sick from pesticides.
 
-Clearly commented, annotated and sectioned Jupyter notebook or Python script.  Comments and annotations add clarity, explanation and intent to the work.  Notebook is well-structured with title, author and sections. Assumptions are stated and justified.
+Lastly, we should consider alternatives to spraying, such as larviciding catch basins, which involves dropping tablets in storm drains along the public roads that slowly dissolve over a five-month period to prevent mosquito larvae from hatching, and eliminating standing water by ensuring that swimming pools and construction sites are regularly maintained.
 
 
-| Score | Status                     | Examples                                                                                                                                                                                                                                         |
-|-------|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 0     | Does not Meet Expectations | 1. Comments and annotations are **absent** <br> 2. There is no clear notebook structure <br> 3. Assumptions are not stated                                                                                                                                       |
-| 1     | Approaching Expectations   | 1. Comments are present but generally unclear or uninformative (e.g., comments do not clarify, explain or interpret the code) <br> 2. There are some structural components like section/subsection headings <br> 3. Assumptions are stated but not justified |
-| 2     | Meets Expectations         | 1. Comments and annotations are clear and informative <br> 2. There is a clear structure to the notebook with title and appropriate sectioning <br> 3. Assumptions are both stated and justified                                                             |
-| 3     | Exceeds Expectations       | 1. Comments and annotations are clear, informative and insightful <br> 2. There is a helpful and cogent structure to the notebook that clarifies the analysis flow <br> 3. Assumptions are stated, justified and backed by evidence or insight               |
 
-#### Data Structures
-
-Python data structures including lists, dictionaries and imported structures (e.g. DataFrames), are created and used correctly.  The appropriate data structures are used in context.  Data structures are created and accessed using appropriate mechanisms such as comprehensions, slices, filters and copies.
-
-| Score | Status | Examples |
-|-------|----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 0 | Does not Meet Expectations | 1. Appropriate data structures are not identified or implemented <br> 2. Data structures are not created appropriately <br> 3. Data structures are not accessed or used effectively |
-| 1 | Approaching Expectations | 1. Contextually appropriate data structures are identified in some but not all instances <br> 2. Data structures are created successfully but lacked efficiency or generality (e.g., structures were hard-coded with values that limits generalization; brute-force vs automatic creation/population of data) <br> 3. Data structures are accessed or used but best practices are not adopted |
-| 2 | Meets Expectations | 1. Contextually appropriate data structures are identified and implemented given the context of the problem <br> 2. Data structures are created in an effective manner <br> 3. Data structures are accessed and used following general programming and Pythonic best practices |
-| 3 | Exceeds Expectations | 1. Use or creation of data structures is clever and insightful <br> 2. Data structures are created in a way that reveals significant Pythonic understanding <br> 3. Data structures are used or applied in clever or insightful ways |
-
-
-#### Python Syntax and Control Flow
-
-Python code is written correctly and follows standard style guidelines and best practices.  There are no runtime errors.  The code is expressive while being reasonably concise.
-
-| Score | Status | Examples |
-|-------|----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 0 | Does not Meet Expectations | 1. Code has systemic syntactical issues <br> 2. Code generates incorrect results <br> 3. Code is disorganized and needlessly difficult |
-| 1 | Approaching Expectations | 1. Code is generally correct with some runtime errors <br> 2. Code logic is generally correct but does not produce the desired outcome <br> 3. Code is somewhat organized and follows some stylistic conventions |
-| 2 | Meets Expectations | 1. Code is syntactically correct (no runtime errors) <br> 2. Code generates desired results (logically correct) <br> 3. Code follows general best practices and style guidelines |
-| 3 | Exceeds Expectations | 1. Code adopts clever or advanced syntax <br> 2. Code generates desired results in an easily consumable manner (e.g., results are written to screen, file, pipeline, etc, as appropriate within the flow of the analysis) <br> 3. Code is exceptionally expressive, well formed and organized |
-
-
-#### Probability and Statistics
-
-Descriptive and inferential statistics are calculated and applied where appropriate.  Probabilistic reasoning is demonstrated.  There is a clear understanding of how probability and statistics affects the analysis being performed.
-
-| Score | Status | Examples |
-|-------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 0 | Does not Meet Expectations | 1. Descriptive statistical calculations are absent <br> 2. Inferential statistical calculations are absent <br> 3. Probabilities or statistics are not relevant given the context of the analysis |
-| 1 | Approaching Expectations | 1. Descriptive statistics are present in some cases <br> 2. Inferential statistics are present in some cases <br> 3. Probabilities or statistics are somewhat relevant to the analysis context |
-| 2 | Meets Expectations | 1. Descriptive statistics are calculated in all relevant situations <br> 2. Inferential statistics are calculated in all relevant situations <br> 3. Probabilities or statistics are relevant to the analysis |
-| 3 | Exceeds Expectations | 1. Descriptive statistics are calculated, interpreted and visualized (where appropriate) <br> 2. Inferential statistics are calculated, interpreted and visualized (where appropriate) <br> 3. Probabilities or statistics are leveraged to draw meaningful or insightful conclusions |
-
-#### Modeling
-
-Data is appropriately prepared for modeling.  Model choice matches the context of the data and the analysis.  Model hyperparameters are optimized.  Model evaluation is robust.  Model results are extracted and explained either visually, numerically or narratively.
-
-| Score | Status | Examples |
-|-------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 0 | Does not Meet Expectations | 1. Data is not prepared for modeling.<br>2. Models are not implemented or not implemented fully.<br>3. Model hyperparameters are not considered.<br>4. Model evaluation is not performed.<br>5. Model results are unavailable or not extracted. |
-| 1 | Approaching Expectations | 1. Data has some null values, inappropriate types and/or improper handling of categorical labels.<br>2. Model choice is questionable given the objective of the analysis.<br>3. Model hyperparameters are insufficiently or not optimized.<br>4. Model evaluation is performed but the evaluation is not generalizable.<br>5. Model results are extracted but not explained or interpreted. |
-| 2 | Meets Expectations | 1. Data is free from nulls and correctly typed for the given model.<br>2. Model choice is appropriate to the analysis.<br>3. Model hyperparameters are optimally selected.<br>4. Model evaluation reflects generalizeable performance.<br>5. Model results are extracted and explained either visually, numerically or naratively. |
-| 3 | Exceeds Expectations | 1. Data is pristinely prepared with creative or useful feature engineering.<br>2. Model selection is justified and demonstrates an awareness of tradeoffs.<br>3. Model hyperparameters are optimized and the optimization is demonstrated/justified.<br>4. Model evaluation reflects generalizable performance and is interpreted in the context of the analysis.<br>5. Model results are explained, interpreted and related to the overarching analysis goals. |
-
-
-#### Presentation
-
-The goal, methodology and results of your work are presented in a clear, concise and thorough manner.  The presentation is appropriate for the specified audience, and includes relevant and enlightening visual aides as appropriate.
-
-| Score | Status | Examples |
-|-------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 0 | Does not Meet Expectations | 1. The problem was not well explained or ambiguous. <br> 2. The level of technicality was far above or below the target audience. <br> 3. The presentation went substantially over or under time. <br> 4. The speaker's voice was difficult to hear of unclear. <br> 5. The presentation visuals did not seem to support the talk. |
-| 1 | Approaching Expectations | 1. The problem was stated but was not 100% clear. <br> 2. The level of technicality was was good at times, but too low or too high at other times given the target audience. <br> 3. The presentation was given went slightly over or under time. <br> 4. The speaker's voice was at times difficult to understand. <br> 5. The presentation visuals were generally helpful, but some of them were either too complex or disconnected from the narrative. |
-| 2 | Meets Expectations | 1. The problem was framed appropriately for the audience. <br> 2. The level of technicality was appropriate to the target audience. <br> 3. The presentation was given within the allocated timeframe. <br> 4. The speaker's voice had volume and clarity. <br> 5. The presentation visuals were helpful and supportive. |
-| 3 | Exceeds Expectations | 1. The problem was expertly stated and compelling. <br> 2. The level of technicality was perfect for the target audience. <br> 3. The presentation was given within the allocated timeframe and paced evenly throughout. <br> 4. The speaker's voice was clear, understandable and consistent. <br> 5. The presentation visuals provided distinct insight, supported the speaker from the background, and were not distracting. |
-# West-Nile-Virus-Prediction
+### Notebook Contents
+1. [01_data_cleaning_EDA] 
+2. [02_feature_engineering]
+3. [03_modelling]
+4. [04_spray_analysis]
+---
