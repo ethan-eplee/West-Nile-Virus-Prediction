@@ -11,10 +11,10 @@
         - [Modelling](#Modelling)
         - [Cost Benefit Analysis](#Cost-Benefit-Analysis)
  - [Conclusion](#Conclusion)
- - [Considerations & Recommnedations](#Considerations-&-Recommendations)
+ - [Considerations & Recommendations](#Considerations-&-Recommendations)
 
-
-### Notebook Contents
+---
+## Notebook Contents
 1. [01_data_cleaning_EDA] 
 2. [02_feature_engineering]
 3. [03_modelling]
